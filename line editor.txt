@@ -1,0 +1,196 @@
+#--------------------------------
+#libraries required imported here
+#--------------------------------
+import os
+import string
+from _overlapped import NULL
+import re 
+import sys
+#----------------------
+#---import ends here---
+#----------------------
+#--insertion_algorithm-
+#----------------------
+def insert_function(list,flag):
+    item_to_insert = str(input("Enter item to be inserted"))
+    list.append(item_to_insert)
+    print(item_to_insert.join("  is Inserted"))
+    return list;
+
+#-------------------
+#insertion ends here
+#-------------------
+#searching algorithm
+#-------------------
+def search_function(list,flag):
+    location_list=[]
+    if(flag==0):
+        search_query=input("Enter Query :")
+        for i in range(0,len(list)):
+            if(list[i]==search_query):
+                location_list.append(i)
+                print(" found at :")
+                print(i)
+
+
+    elif(flag==1):
+        print("Please open a file")
+    return location_list
+#------------------------
+#search function end here
+#------------------------
+#--deletion---algorithm--
+#------------------------
+def delete_function(list,flag):
+    if(flag==0):
+        location_list=search_function(list,flag)
+        deletion_index=input("Enter Index From Where query should be deleted :")
+        deletion_index=int(deletion_index)
+        deletion_value=list[deletion_index]
+        list.remove(deletion_value)
+        return list
+    else:
+        print("please open a file ")
+#----------------------------------------
+#-------delete---function----------------
+#----------------------------------------
+
+#----------------------------------------
+#-------Save---function----------------
+#----------------------------------------
+def save(list,flag,file_name):
+    #list=str(list)
+    x = ""
+    for i in range(len(list)):
+        x += str(list[i])+" "
+
+    f = open(file_name, 'r+')
+    f.seek(0)
+    f.write(x)
+    f.truncate()
+    f.close()
+ #save ends here
+ #copy function 
+def make_copy(list,file_name):
+    count=1
+    frmt = ".txt"
+    str_count=str(count)
+    file_name=str(file_name)
+    count=count+1
+    file_name+=str_count
+    file_name+=frmt
+    list=str(list)
+    f = open(file_name, 'w+')
+    f.seek(0)
+    f.write(list)
+    f.truncate()
+    f.close()
+#copying algo ends here
+def exit_func():
+    sys.exit("program terminated")
+#help func
+def print_help():
+    print("command name                function of command")
+    print("ls                         list all the files of current directory")
+    print("open                        open  & reads file for further operations file")
+    print("close                       close the interface and get output file")
+    print("read                        read file contents")
+    print("insert                      insert data to file")
+    print("search                      search data in file contents")
+    print("delete                      delete data from file")
+    print("save                        Save final output file")
+            
+#command--line--interface--starts--here--
+#----------------------------------------
+def command_shell():
+    command = NULL;
+    file_name = NULL;
+    file_list = [None]
+    deleted_list=[None]
+    flag = 1
+    var1 = str(os.listdir())
+    file_list = var1
+    while(True):
+        print("command@:")
+        command=input()
+        command =command.lower()
+        if(command == "ls"):
+            print(file_list)
+        elif(command == "open"):
+            file_name=input("Enter File Name : ")
+            if file_name not in file_list:
+                print("No such file in Current DIR.")
+                
+            elif file_name in file_list:
+                file_open = open(file_name,"r+")
+                list = file_open.read()
+                list = list.split()
+                flag = 0
+                file_open.close()
+                
+        elif(command=="read"):
+            if(flag==1):
+                print("please chose a file first ")
+            else:
+                print(list)
+        elif(command == "insert"):
+            if(flag==1):
+                print("please chose a file first ")
+
+            else:
+                list = insert_function(list,flag)
+            
+        elif(command == "search"):
+            if(flag==0):
+                search_function(list,flag)
+            else:
+                print("please open a file first")
+        elif(command == "delete"):
+            if(flag==0):
+                list=delete_function(list,flag)
+            else:
+                print("Please Enter A file")
+        elif(command == "save"):
+            if(flag==0):
+                save(list,flag,file_name)
+            else:
+                print("Please Open A file first")    
+        elif(command=="copy"):
+            if(flag== 0):
+                make_copy(list,file_name)
+            else:
+                print("please open a file")
+        elif(command=="help"):
+            print_help()
+        elif(command=="exit"):
+            exit_func()       
+        else:
+
+            print("Command Not Recognised, Try again or ask HELP")
+#---------------------------
+#command interface ends here
+#---------------------------
+#main
+#---------------------------
+print("commands are not case sensitive ")
+print("press help for help & Command mode  OR c for command mode ")
+choice = input("Enter Here : ")
+choice = str(choice)
+choice = choice.lower()
+#help--menu
+if(choice == "help"):
+    print("command name                function of command")
+    print("ls                         list all the files of current directory")
+    print("open                        open  & reads file for further operations file")
+    print("exit                       close the interface and get output file")
+    print("read                        read file contents")
+    print("insert                      insert data to file")
+    print("search                      search data in file contents")
+    print("delete                      delete data from file")
+    print("save                        Save final output file")
+    command_shell()
+#help-ends-here
+elif(choice=="c"):
+    command_shell()
+else:
+    print("Wrong Choice Program Terminated")
